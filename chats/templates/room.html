@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>chats</title>
+</head>
+<body>
+    <input type="text" id="chat-message">
+    <input type="submit" value="Send" id="message-send">
+
+   <div id="container"></div>
+
+    <script>
+        const chatSocket = new WebSocket('ws://' + window.location.host + '/ws/chat/' );
+        chatSocket.onopen = function(e){
+            console.log("websocket connection is successful")
+        };
+        chatSocket.onclose = function(e){
+            console.log('websocket closed unexpectedly')
+        };
+        chatSocket.onmessage = function(e){
+            const data = JSON.parse(e.data);
+            var div = document.createElement("div");
+            div.innerHTML = data.message
+            document.querySelector('#chat-message').value = "";
+            document.querySelector('#container').appendChild(div)
+        };
+        document.getElementById('message-send').onclick = function(e){
+            var messageInput = document.getElementById('chat-message').value;
+            chatSocket.send(JSON.stringify({message:messageInput}));
+        };
+
+
+    </script>
+</body>
+</html>
