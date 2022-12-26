@@ -7,10 +7,22 @@
     <title>chats</title>
 </head>
 <body>
+    <div>
+        <nav>
+            <h2>Django ChatApp</h2>
+        </nav>
+    </div>
     <input type="text" id="chat-message">
     <input type="submit" value="Send" id="message-send">
 
-   <div id="container"></div>
+   <div id="received-messages"></div>
+   <div id="sent-messages"></div>
+   <style>
+        #sent-messages{
+            
+            float: right;
+        }
+   </style>
 
     <script>
         const chatSocket = new WebSocket('ws://' + window.location.host + '/ws/chat/' );
@@ -23,13 +35,26 @@
         chatSocket.onmessage = function(e){
             const data = JSON.parse(e.data);
             var div = document.createElement("div");
+            var receiveDiv = document.createElement("div")
+            receiveDiv.innerHTML = data.username + ' : ' + data.message
             div.innerHTML = data.message
             document.querySelector('#chat-message').value = "";
-            document.querySelector('#container').appendChild(div)
+            if (data.username == '{{request.user.username}}') {
+                document.querySelector('#sent-messages').appendChild(div)
+            }else{
+                document.querySelector('#received-messages').appendChild(receiveDiv)
+            }
+            
+        };
+        document.getElementById('chat-message').onkeyup  = function(e){
+            if (e.keyCode === 13) {
+                document.getElementById('message-send').click();
+            }
         };
         document.getElementById('message-send').onclick = function(e){
             var messageInput = document.getElementById('chat-message').value;
-            chatSocket.send(JSON.stringify({message:messageInput}));
+            var username = '{{request.user.username}}'
+            chatSocket.send(JSON.stringify({username:username,message:messageInput}));
         };
 
 
