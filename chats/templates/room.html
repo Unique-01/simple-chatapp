@@ -1,63 +1,78 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>chats</title>
-</head>
-<body>
-    <div>
-        <nav>
-            <h2>Django ChatApp</h2>
-        </nav>
-    </div>
-    <input type="text" id="chat-message">
-    <input type="submit" value="Send" id="message-send">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>chats</title>
+    </head>
+    <body>
+        <div>
+            <nav>
+                <h2>Django ChatApp</h2>
+            </nav>
+        </div>
+        <!-- Message Display Box -->
+        <div id="messages">
+            {% for message in room_message %}
+                {% if message.user.username == request.user.username %}
+                    <p>
+                        You : {{ message.content }}
+                    </p>
+                {% else %}
+                    <p>
+                        {{ message.user.username }} : {{ message.content }}
+                    </p>
+                {% endif %}
+            {% endfor %}
+        </div>
+        <!-- Message input box -->
+        <div class="input-box">
+            <input type="text" id="input-message">
+            <input type="submit" value="Send" id="message-send">
+        </div>
+        {{ room_name|json_script:"room-name" }}
 
-   <div id="received-messages"></div>
-   <div id="sent-messages"></div>
-   <style>
-        #sent-messages{
-            
-            float: right;
-        }
-   </style>
-
-    <script>
-        const chatSocket = new WebSocket('ws://' + window.location.host + '/ws/chat/' );
+        <script>
+        const roomName = JSON.parse(document.getElementById('room-name').textContent);
+        
+        const chatSocket = new WebSocket('ws://' + window.location.host + '/ws/chat/' + roomName + '/' );
         chatSocket.onopen = function(e){
             console.log("websocket connection is successful")
         };
+
         chatSocket.onclose = function(e){
             console.log('websocket closed unexpectedly')
         };
+
         chatSocket.onmessage = function(e){
             const data = JSON.parse(e.data);
-            var div = document.createElement("div");
-            var receiveDiv = document.createElement("div")
-            receiveDiv.innerHTML = data.username + ' : ' + data.message
-            div.innerHTML = data.message
-            document.querySelector('#chat-message').value = "";
+            var paragraph = document.createElement("p")
+            var userMessage = document.createElement("p")
+            userMessage.innerHTML = 'You : ' + data.message
+            paragraph.innerHTML = data.username + ' : ' + data.message
+            document.querySelector('#input-message').value = "";
             if (data.username == '{{request.user.username}}') {
-                document.querySelector('#sent-messages').appendChild(div)
-            }else{
-                document.querySelector('#received-messages').appendChild(receiveDiv)
+                document.getElementById('messages').appendChild(userMessage)
+            } else {
+                document.getElementById('messages').appendChild(paragraph) 
             }
-            
+                       
         };
-        document.getElementById('chat-message').onkeyup  = function(e){
+
+        document.getElementById('input-message').onkeyup  = function(e){
             if (e.keyCode === 13) {
                 document.getElementById('message-send').click();
             }
         };
+
         document.getElementById('message-send').onclick = function(e){
-            var messageInput = document.getElementById('chat-message').value;
+            var messageInput = document.getElementById('input-message').value;
             var username = '{{request.user.username}}'
             chatSocket.send(JSON.stringify({username:username,message:messageInput}));
         };
 
 
-    </script>
-</body>
+        </script>
+    </body>
 </html>

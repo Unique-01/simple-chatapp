@@ -3,5 +3,6 @@ from . import views
 # from django.contrib.auth.views import LoginView,LogoutView
 
 urlpatterns = [
-    path('chat/',views.room,name='chat-room'),
+    path('chat/',views.IndexView.as_view(),name='index'),
+    path('chat/<str:room_name>/',views.room,name='chat-room'),
 ]
