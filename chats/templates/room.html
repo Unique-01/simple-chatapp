@@ -1,78 +1,42 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>chats</title>
-    </head>
-    <body>
-        <div>
-            <nav>
-                <h2>Django ChatApp</h2>
-            </nav>
-        </div>
-        <!-- Message Display Box -->
-        <div id="messages">
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+    <!-- Message Display Box -->
+    <div class="container-fluid col-md-5  color  mt-5" >
+        
+        <h3 class=" fixed-top p-2 rounded room-name">{{ room.room_name|capfirst }}</h3>
+        <div id="messages" class="px-3 pt-4 mb-10 rounded " style="background: url({% static 'background.png' %}) ;">
             {% for message in room_message %}
                 {% if message.user.username == request.user.username %}
-                    <p>
-                        You : {{ message.content }}
-                    </p>
+                    <div class="d-flex justify-content-end ml-10">
+                        <p class="sent text-white p-1 rounded">
+                            <span>{{ message.content }}</span>
+                        </p>
+                    </div>
                 {% else %}
-                    <p>
-                        {{ message.user.username }} : {{ message.content }}
-                    </p>
+                    <div class="d-flex justify-content-start mr-10">
+                        <p class=" receive text-white p-1 px-2 rounded">
+                            <small>{{ message.user.username }}</small><br>
+                              <span>{{ message.content }}</span>
+                        </p>
+                    </div>
                 {% endif %}
             {% endfor %}
         </div>
         <!-- Message input box -->
-        <div class="input-box">
-            <input type="text" id="input-message">
-            <input type="submit" value="Send" id="message-send">
+        <div class="input-group col-md-5 fixed-bottom container mb-2">
+            <input type="text"
+                   id="input-message"
+                   class="form-control"
+                   placeholder="Type your message">
+            <div class="input-group-">
+                <input type="submit" value="Send" id="message-send" class="btn btn-success">
+            </div>
         </div>
-        {{ room_name|json_script:"room-name" }}
+    </div>
+    <!-- Convert django variables to js variables -->
+    {{ room_name|json_script:"room-name" }}
+    {{request.user.username|json_script:"current-user"}}
+    <script src="{% static 'room.js' %}"></script>
 
-        <script>
-        const roomName = JSON.parse(document.getElementById('room-name').textContent);
-        
-        const chatSocket = new WebSocket('ws://' + window.location.host + '/ws/chat/' + roomName + '/' );
-        chatSocket.onopen = function(e){
-            console.log("websocket connection is successful")
-        };
-
-        chatSocket.onclose = function(e){
-            console.log('websocket closed unexpectedly')
-        };
-
-        chatSocket.onmessage = function(e){
-            const data = JSON.parse(e.data);
-            var paragraph = document.createElement("p")
-            var userMessage = document.createElement("p")
-            userMessage.innerHTML = 'You : ' + data.message
-            paragraph.innerHTML = data.username + ' : ' + data.message
-            document.querySelector('#input-message').value = "";
-            if (data.username == '{{request.user.username}}') {
-                document.getElementById('messages').appendChild(userMessage)
-            } else {
-                document.getElementById('messages').appendChild(paragraph) 
-            }
-                       
-        };
-
-        document.getElementById('input-message').onkeyup  = function(e){
-            if (e.keyCode === 13) {
-                document.getElementById('message-send').click();
-            }
-        };
-
-        document.getElementById('message-send').onclick = function(e){
-            var messageInput = document.getElementById('input-message').value;
-            var username = '{{request.user.username}}'
-            chatSocket.send(JSON.stringify({username:username,message:messageInput}));
-        };
-
-
-        </script>
-    </body>
-</html>
+{% endblock content %}

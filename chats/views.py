@@ -29,7 +29,7 @@ class IndexView(LoginRequiredMixin,generic.ListView,generic.FormView):
 def room(request,room_name):
     room = Room.objects.get(slug=room_name)
     room_message = Message.objects.filter(room=room).order_by('timestamp')
-    return render(request,'room.html',{'room_name':room_name,'room_message':room_message})
+    return render(request,'room.html',{'room_name':room_name,'room_message':room_message,'room':room})
 
 
 def signUp(request):
