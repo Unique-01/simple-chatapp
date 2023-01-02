@@ -74,6 +74,9 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'chatrealtime.wsgi.application'
 ASGI_APPLICATION = 'chatrealtime.asgi.application'
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
+LOGOUT_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL ='index'
 
 
 # Database
@@ -145,3 +148,18 @@ CHANNEL_LAYERS = {
     }
 }
 
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# Email Configuration
+# https://docs.djangoproject.com/en/3.2/topics/email/
+
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+# EMAIL_HOST = 'smtp.gmail.com'
+
+# EMAIL_PORT = 465
+
+# EMAIL_HOST_USER = Config('EMAIL_HOST_USER')
+
+# EMAIL_HOST_PASSWORD = Config('EMAIL_HOST_PASSWORD')
+
+# EMAIL_USE_SSL = True

@@ -2,10 +2,21 @@
 {% load static %}
 {% block content %}
     <!-- Message Display Box -->
-    <div class="container-fluid col-md-5  color  mt-5" >
-        
-        <h3 class=" fixed-top p-2 rounded room-name">{{ room.room_name|capfirst }}</h3>
-        <div id="messages" class="px-3 pt-4 mb-10 rounded " style="background: url({% static 'background.png' %}) ;">
+    <div class="container-fluid col-md-5  color  mt-5">
+        <div class="fixed-top  rounded">
+            
+            <h3 class="p-2 room-name">{{ room.room_name|capfirst }}</h3>
+
+            <p>
+                <a class="btn m-3 back" href="{% url 'index' %}"> &larrhk;</a>
+            </p>
+            <p class="d-flex justify-content-end">
+                <a href="{% url 'logout' %}" class="btn btn-danger m-3 ">Logout</a>
+            </p>
+        </div>
+        <div id="messages"
+             class="px-3 pt-4 mb-10 rounded "
+             style="background: url({% static 'background.png' %}) ;">
             {% for message in room_message %}
                 {% if message.user.username == request.user.username %}
                     <div class="d-flex justify-content-end ml-10">
@@ -16,8 +27,9 @@
                 {% else %}
                     <div class="d-flex justify-content-start mr-10">
                         <p class=" receive text-white p-1 px-2 rounded">
-                            <small>{{ message.user.username }}</small><br>
-                              <span>{{ message.content }}</span>
+                            <small>{{ message.user.username }}</small>
+                            <br>
+                            <span>{{ message.content }}</span>
                         </p>
                     </div>
                 {% endif %}
@@ -36,7 +48,6 @@
     </div>
     <!-- Convert django variables to js variables -->
     {{ room_name|json_script:"room-name" }}
-    {{request.user.username|json_script:"current-user"}}
+    {{ request.user.username|json_script:"current-user" }}
     <script src="{% static 'room.js' %}"></script>
-
 {% endblock content %}

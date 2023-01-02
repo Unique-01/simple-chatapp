@@ -27,9 +27,10 @@ class IndexView(LoginRequiredMixin,generic.ListView,generic.FormView):
 
 @login_required
 def room(request,room_name):
+    chat_room = Room.objects.all()
     room = Room.objects.get(slug=room_name)
     room_message = Message.objects.filter(room=room).order_by('timestamp')
-    return render(request,'room.html',{'room_name':room_name,'room_message':room_message,'room':room})
+    return render(request,'room.html',{'room_name':room_name,'room_message':room_message,'room':room,'chat_room':chat_room})
 
 
 def signUp(request):
@@ -43,6 +44,6 @@ def signUp(request):
             user = authenticate(username=username,password=password)
             login(request,user)     
             messages.success(request,"Your account has been created successfully")  
-            return redirect('chat-room')    
+            return redirect('index')    
 
     return render(request,'registration/signup.html',{'form':form})

@@ -1,20 +1,26 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
-
-    
-    {% block content %}
-    <div>
-        <h3>Available Rooms</h3>
-        {% for room in room_list %}
-        <a href="{% url 'chat-room' room.slug %}">{{room}}</a><br>
-    {% endfor %}
+{% block content %}
+    <div class="container bg-white col-md-5 p-4 mt-5 rounded shadow">
+        <form action="" method="post">
+            {% csrf_token %}
+            <h4 class="text-success">Create new room</h4>
+            {{ form|crispy }}
+            <button class="btn btn-success" type="submit">Create room</button>
+        </form>
+        <br />
+        <div>
+            <h4 class="text-secondary">Available Rooms</h4>
+            <hr />
+            <ul>
+                {% for room in room_list %}
+                    <li>
+                        <p >
+                            <a href="{% url 'chat-room' room.slug %}" class="available-room">{{ room | capfirst }}</a>
+                        </p>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
     </div>
-    
-    <form action="" method="post">
-        {% csrf_token %}
-        <h4>Create new room</h4>
-        {{form|crispy}}
-        <button type="submit">Create room</button>
-    </form>
-    {% endblock content %}
-        
+{% endblock content %}

@@ -1,17 +1,23 @@
+{% extends "base.html" %}
 {% load crispy_forms_tags %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-</head>
-<body>
-    <form action="" method="post">
+{% block content %}
+    <form action=""
+          method="post"
+          class="bg-white col-md-4 container mt-5 p-5 rounded">
+        <h3 class="text-success">Login</h3>
+        <hr>
         {% csrf_token %}
-        {{form|crispy}}
-        <button type="submit">Login</button>
+        {{ form|crispy }}
+        <button type="submit" class="btn btn-primary">Login</button>
+        <p>
+            <small class="text-dark">Forgot password?
+                <a href="{% url 'password_reset' %}" class="text-danger">Reset it</a>
+            </small>
+        </p>
+        <p>
+            <small class="text-dark">Don't have an account?
+                <a class="text-success" href="{% url 'signup' %}">signup</a>
+            </small>
+        </p>
     </form>
-</body>
-</html>
+{% endblock content %}

@@ -2,32 +2,28 @@
     margin-bottom: 100px;
 }
 small{
-    /* font-size:15px; */
     font-style: italic;
     font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-    /* color: aliceblue; */
     color: antiquewhite;
-    /* font-weight: bold; */
 }
 .receive{
-    background-color: yellowgreen;
+    background-color: green;
 }
 .sent{
-    background-color:burlywood;
+    background-color: brown;
+    color: white;
 }
 body{
-    /* background-color: aquamarine; */
-    background: linear-gradient(to right,green,lime,green);
-    /* background-color: green; */
+    background: linear-gradient(to right,violet,blueviolet,violet,purple);
 }
 .room-name{
     color: white;
     font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
-    /* font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif; */
-    font-size: 35px;
-    background-color: green;
-    /* margin-bottom: -3px; */
-    /* background-color: green; */
+    font-size: 30px;
+    background-color: rgb(170, 66, 66);
+}
+#messages{
+    min-height: 75vh;
 }
 .ml-10{
     margin-left: 80px;
@@ -40,4 +36,24 @@ body{
 }
 p{
     font-family:'Times New Roman', Times, serif;
+}
+.form-text{
+    font-size: 11px;
+}
+.signup{
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    color: rgb(83, 76, 76);
+}
+.signup>h3{
+    color:darkviolet;
+}
+.back{
+    font-weight: 900;
+    border-radius: 50%;
+    background-color: black;
+    color: white;
+}
+.available-room{
+    font-size: 20px;
+    color: purple;
 }
