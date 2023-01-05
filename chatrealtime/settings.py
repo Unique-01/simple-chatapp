@@ -13,29 +13,36 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 from pathlib import Path
 from decouple import Config
 import os
+import dj_database_url
+from dotenv import load_dotenv
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# load_dotenv(BASE_DIR / '.env')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = Config('SECRET_KEY')
+# SECRET_KEY = os.getenv('SECRET_KEY')
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ["*"]
+CSRF_TRUSTED_ORIGINS = [Config('CSRF_TRUSTED_ORIGINS')]
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'django.contrib.contenttypes',
     'django.contrib.admin',
     'django.contrib.auth',
-    'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
@@ -46,6 +53,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -77,16 +85,20 @@ ASGI_APPLICATION = 'chatrealtime.asgi.application'
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 LOGOUT_REDIRECT_URL = '/'
 LOGIN_REDIRECT_URL ='index'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'  # new
+
 
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
-
+DATABASE_URL = Config('DATABASE_URL')
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': dj_database_url.config() #parse(os.environ.get('DATABASE_URL'), conn_max_age=600),
+    # {
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': BASE_DIR / 'db.sqlite3',
+        
+    # }
 }
 
 
@@ -127,6 +139,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR,'static')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
@@ -142,24 +155,25 @@ CHANNEL_LAYERS = {
         {
             "hosts":
             [
-                ('127.0.0.1',6379)
+                (Config('FLY_REDIS_URL'))
             ]
+            
         }
     }
 }
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # Email Configuration
 # https://docs.djangoproject.com/en/3.2/topics/email/
 
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
-# EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST = 'smtp.gmail.com'
 
-# EMAIL_PORT = 465
+EMAIL_PORT = 465
 
-# EMAIL_HOST_USER = Config('EMAIL_HOST_USER')
+EMAIL_HOST_USER = Config('EMAIL_HOST_USER')
 
-# EMAIL_HOST_PASSWORD = Config('EMAIL_HOST_PASSWORD')
+EMAIL_HOST_PASSWORD = Config('EMAIL_HOST_PASSWORD')
 
-# EMAIL_USE_SSL = True
+EMAIL_USE_SSL = True
