@@ -4,11 +4,9 @@
     <!-- Message Display Box -->
     <div class="container-fluid col-md-5  color  mt-5">
         <div class="fixed-top  rounded">
-            
             <h3 class="p-2 room-name">{{ room.room_name|capfirst }}</h3>
-
             <p>
-                <a class="btn m-3 back" href="{% url 'index' %}"> &larrhk;</a>
+                <a class="btn m-3 back" href="{% url 'index' %}">&larrhk;</a>
             </p>
             <p class="d-flex justify-content-end">
                 <a href="{% url 'logout' %}" class="btn btn-danger m-3 ">Logout</a>
@@ -49,5 +47,6 @@
     <!-- Convert django variables to js variables -->
     {{ room_name|json_script:"room-name" }}
     {{ request.user.username|json_script:"current-user" }}
+    {{ debug|json_script:'debug-mode' }}
     <script src="{% static 'room.js' %}"></script>
 {% endblock content %}

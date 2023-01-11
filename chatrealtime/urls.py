@@ -16,9 +16,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path,include
 from chats import views
+from django.contrib.auth.views import PasswordResetView
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('',include('chats.urls')),
+    path('accounts/password_reset',PasswordResetView.as_view(template_name='registration/password_reset_email.html',html_email_template_name='registration/html_password_reset_email.html'),name='password_reset'),
     path('accounts/',include('django.contrib.auth.urls')),
     path('register/',views.signUp,name='signup'),
 ]

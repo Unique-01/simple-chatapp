@@ -1,7 +1,10 @@
 const roomName = JSON.parse(document.getElementById('room-name').textContent);
 const currentUser = JSON.parse(document.getElementById('current-user').textContent);
+const debugMode = JSON.parse(document.getElementById('debug-mode').textContent);
 
-const chatSocket = new WebSocket('wss://' + window.location.host + '/ws/chat/' + roomName + '/');
+const chatSocket = debugMode == 0 ? new WebSocket('ws://' + window.location.host + '/ws/chat/' + roomName + '/') :
+ new WebSocket('wss://' + window.location.host + '/ws/chat/' + roomName + '/');
+
 chatSocket.onopen = function (e) {
     console.log("websocket connection is successful")
 };
@@ -21,8 +24,8 @@ chatSocket.onmessage = function (e) {
     // add attributes to the created elements
     receivedMessage.classList.add("text-white", "p-1", "px-2", "rounded", "receive");
     sentMessage.classList.add("text-white", "p-1", "px-2", "rounded", "sent");
-    flexEndDiv.classList.add("d-flex", "justify-content-end","ml-10");
-    flexStartDiv.classList.add("d-flex", "justify-content-start","mr-10");
+    flexEndDiv.classList.add("d-flex", "justify-content-end", "ml-10");
+    flexStartDiv.classList.add("d-flex", "justify-content-start", "mr-10");
 
     sentMessage.innerHTML = data.message;
     receivedMessage.innerHTML = '<small>' + data.username + '</small>' + ' <br> ' + data.message;
