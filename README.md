@@ -45,8 +45,13 @@ To run this project, you will need to add the following environment variables to
 
 
 ## Run Locally
+Run the following Command
+```bash
+    python manage.py makemigrations
+    python manage.py migrate
+```
 
-Start the server with
+Then start the server with
 
 ```bash
     python manage.py runserver
